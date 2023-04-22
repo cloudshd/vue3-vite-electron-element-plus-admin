@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c56abb29-41de-42b1-b465-7050f81a876a" name="Default Changelist" comment="init" />
+    <list default="true" id="c56abb29-41de-42b1-b465-7050f81a876a" name="Default Changelist" comment="init">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.zh-CN.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.zh-CN.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2Olb3Brlouz5EywYBd9o2Hdbpml" />
@@ -40,7 +63,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1682137917017</updated>
-      <workItem from="1682137920105" duration="868000" />
+      <workItem from="1682137920105" duration="1732000" />
+      <workItem from="1682142098811" duration="838000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1682138287578</created>
@@ -55,19 +79,34 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="init" />
     <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="240" y="151" key="Vcs.Push.Dialog.v2" timestamp="1682138721456">
+    <state x="240" y="151" key="Vcs.Push.Dialog.v2" timestamp="1682142554616">
       <screen x="0" y="23" width="1280" height="777" />
     </state>
-    <state x="240" y="151" key="Vcs.Push.Dialog.v2/0.23.1280.777@0.23.1280.777" timestamp="1682138721456" />
-    <state x="462" y="312" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1682138202503">
+    <state x="240" y="151" key="Vcs.Push.Dialog.v2/0.23.1280.777@0.23.1280.777" timestamp="1682142554616" />
+    <state x="438" y="332" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1682143057379">
       <screen x="0" y="23" width="1280" height="777" />
     </state>
-    <state x="462" y="312" key="git4idea.remote.GitConfigureRemotesDialog/0.23.1280.777@0.23.1280.777" timestamp="1682138202503" />
+    <state x="438" y="332" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1280.777@0.23.1280.777" timestamp="1682143057379" />
+    <state x="326" y="312" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1682142572799">
+      <screen x="0" y="23" width="1280" height="777" />
+    </state>
+    <state x="326" y="312" key="git4idea.remote.GitConfigureRemotesDialog/0.23.1280.777@0.23.1280.777" timestamp="1682142572799" />
   </component>
 </project>

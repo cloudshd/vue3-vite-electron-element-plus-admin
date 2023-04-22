@@ -2,13 +2,13 @@
 
 [![license](https://img.shields.io/github/license/kailong321200875/vue-element-plus-admin.svg)](LICENSE)
 
-<h1>vue-element-plus-admin</h1>
+<h1>vue3+vite+electron+element-plus-admin</h1>
 </div>
 
 [English](./README.md) | **中文**
 
 ## 介绍
-
+electron 整合vue3 + vite4+element-plus
 vue-element-plus-admin 是一个基于 `element-plus` 免费开源的中后台模版。使用了最新的`vue3`，`vite4`，`TypeScript`等主流技术开发，开箱即用的中后台前端解决方案，可以用来作为项目的启动模版，也可用于学习参考。并且时刻关注着最新技术动向，尽可能的第一时间更新。
 
 vue-element-plus-admin 的定位是后台集成方案，不太适合当基础模板来进行二次开发。因为集成了很多你可能用不到的功能，会造成不少的代码冗余。如果你的项目不关注这方面的问题，也可以直接基于它进行二次开发。
