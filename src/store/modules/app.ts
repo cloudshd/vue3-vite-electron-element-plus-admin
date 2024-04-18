@@ -1,13 +1,11 @@
 import { defineStore } from 'pinia'
 import { store } from '../index'
 import { setCssVar, humpToUnderline } from '@/utils'
-import { ElMessage } from 'element-plus'
-import { ElementPlusSize } from '@/types/elementPlus'
-import { useCache } from '@/hooks/web/useCache'
-import { LayoutType } from '@/types/layout'
-import { ThemeTypes } from '@/types/theme'
-
-const { wsCache } = useCache()
+import { colorIsDark, hexToRGB, lighten, mix } from '@/utils/color'
+import { ElMessage, ComponentSize } from 'element-plus'
+import { useCssVar } from '@vueuse/core'
+import { unref } from 'vue'
+import { useDark } from '@vueuse/core'
 
 interface AppState {
   breadcrumb: boolean
@@ -24,13 +22,13 @@ interface AppState {
   fixedHeader: boolean
   greyMode: boolean
   dynamicRouter: boolean
+  serverDynamicRouter: boolean
   pageLoading: boolean
   layout: LayoutType
   title: string
-  userInfo: string
   isDark: boolean
-  currentSize: ElementPlusSize
-  sizeMap: ElementPlusSize[]
+  currentSize: ComponentSize
+  sizeMap: ComponentSize[]
   mobile: boolean
   footer: boolean
   theme: ThemeTypes
@@ -40,12 +38,10 @@ interface AppState {
 export const useAppStore = defineStore('app', {
   state: (): AppState => {
     return {
-      userInfo: 'userInfo', // 登录信息存储字段-建议每个项目换一个字段，避免与其他项目冲突
       sizeMap: ['default', 'large', 'small'],
       mobile: false, // 是否是移动端
       title: import.meta.env.VITE_APP_TITLE, // 标题
       pageLoading: false, // 路由跳转loading
-
       breadcrumb: true, // 面包屑
       breadcrumbIcon: true, // 面包屑图标
       collapse: false, // 折叠菜单
@@ -60,13 +56,14 @@ export const useAppStore = defineStore('app', {
       fixedHeader: true, // 固定toolheader
       footer: true, // 显示页脚
       greyMode: false, // 是否开始灰色模式，用于特殊悼念日
-      dynamicRouter: wsCache.get('dynamicRouter') || false, // 是否动态路由
-      fixedMenu: wsCache.get('fixedMenu') || false, // 是否固定菜单
+      dynamicRouter: true, // 是否动态路由
+      serverDynamicRouter: true, // 是否服务端渲染动态路由
+      fixedMenu: false, // 是否固定菜单
 
-      layout: wsCache.get('layout') || 'classic', // layout布局
-      isDark: wsCache.get('isDark') || false, // 是否是暗黑模式
-      currentSize: wsCache.get('default') || 'default', // 组件尺寸
-      theme: wsCache.get('theme') || {
+      layout: 'classic', // layout布局
+      isDark: false, // 是否是暗黑模式
+      currentSize: 'default', // 组件尺寸
+      theme: {
         // 主题色
         elColorPrimary: '#409eff',
         // 左侧菜单边框颜色
@@ -141,6 +138,9 @@ export const useAppStore = defineStore('app', {
     getDynamicRouter(): boolean {
       return this.dynamicRouter
     },
+    getServerDynamicRouter(): boolean {
+      return this.serverDynamicRouter
+    },
     getFixedMenu(): boolean {
       return this.fixedMenu
     },
@@ -153,16 +153,13 @@ export const useAppStore = defineStore('app', {
     getTitle(): string {
       return this.title
     },
-    getUserInfo(): string {
-      return this.userInfo
-    },
     getIsDark(): boolean {
       return this.isDark
     },
-    getCurrentSize(): ElementPlusSize {
+    getCurrentSize(): ComponentSize {
       return this.currentSize
     },
-    getSizeMap(): ElementPlusSize[] {
+    getSizeMap(): ComponentSize[] {
       return this.sizeMap
     },
     getMobile(): boolean {
@@ -216,11 +213,12 @@ export const useAppStore = defineStore('app', {
       this.greyMode = greyMode
     },
     setDynamicRouter(dynamicRouter: boolean) {
-      wsCache.set('dynamicRouter', dynamicRouter)
       this.dynamicRouter = dynamicRouter
     },
+    setServerDynamicRouter(serverDynamicRouter: boolean) {
+      this.serverDynamicRouter = serverDynamicRouter
+    },
     setFixedMenu(fixedMenu: boolean) {
-      wsCache.set('fixedMenu', fixedMenu)
       this.fixedMenu = fixedMenu
     },
     setPageLoading(pageLoading: boolean) {
@@ -228,11 +226,10 @@ export const useAppStore = defineStore('app', {
     },
     setLayout(layout: LayoutType) {
       if (this.mobile && layout !== 'classic') {
-        ElMessage.warning('移动端模式下不支持切换其他布局')
+        ElMessage.warning('移动端模式下不支持切换其它布局')
         return
       }
       this.layout = layout
-      wsCache.set('layout', this.layout)
     },
     setTitle(title: string) {
       this.title = title
@@ -246,28 +243,94 @@ export const useAppStore = defineStore('app', {
         document.documentElement.classList.add('light')
         document.documentElement.classList.remove('dark')
       }
-      wsCache.set('isDark', this.isDark)
+      this.setPrimaryLight()
     },
-    setCurrentSize(currentSize: ElementPlusSize) {
+    setCurrentSize(currentSize: ComponentSize) {
       this.currentSize = currentSize
-      wsCache.set('currentSize', this.currentSize)
     },
     setMobile(mobile: boolean) {
       this.mobile = mobile
     },
     setTheme(theme: ThemeTypes) {
       this.theme = Object.assign(this.theme, theme)
-      wsCache.set('theme', this.theme)
     },
     setCssVarTheme() {
       for (const key in this.theme) {
         setCssVar(`--${humpToUnderline(key)}`, this.theme[key])
       }
+      this.setPrimaryLight()
     },
     setFooter(footer: boolean) {
       this.footer = footer
+    },
+    setPrimaryLight() {
+      if (this.theme.elColorPrimary) {
+        const elColorPrimary = this.theme.elColorPrimary
+        const color = this.isDark ? '#000000' : '#ffffff'
+        const lightList = [3, 5, 7, 8, 9]
+        lightList.forEach((v) => {
+          setCssVar(`--el-color-primary-light-${v}`, mix(color, elColorPrimary, v / 10))
+        })
+        setCssVar(`--el-color-primary-dark-2`, mix(color, elColorPrimary, 0.2))
+      }
+    },
+    setMenuTheme(color: string) {
+      const primaryColor = useCssVar('--el-color-primary', document.documentElement)
+      const isDarkColor = colorIsDark(color)
+      const theme: Recordable = {
+        // 左侧菜单边框颜色
+        leftMenuBorderColor: isDarkColor ? 'inherit' : '#eee',
+        // 左侧菜单背景颜色
+        leftMenuBgColor: color,
+        // 左侧菜单浅色背景颜色
+        leftMenuBgLightColor: isDarkColor ? lighten(color!, 6) : color,
+        // 左侧菜单选中背景颜色
+        leftMenuBgActiveColor: isDarkColor
+          ? 'var(--el-color-primary)'
+          : hexToRGB(unref(primaryColor), 0.1),
+        // 左侧菜单收起选中背景颜色
+        leftMenuCollapseBgActiveColor: isDarkColor
+          ? 'var(--el-color-primary)'
+          : hexToRGB(unref(primaryColor), 0.1),
+        // 左侧菜单字体颜色
+        leftMenuTextColor: isDarkColor ? '#bfcbd9' : '#333',
+        // 左侧菜单选中字体颜色
+        leftMenuTextActiveColor: isDarkColor ? '#fff' : 'var(--el-color-primary)',
+        // logo字体颜色
+        logoTitleTextColor: isDarkColor ? '#fff' : 'inherit',
+        // logo边框颜色
+        logoBorderColor: isDarkColor ? color : '#eee'
+      }
+      this.setTheme(theme)
+      this.setCssVarTheme()
+    },
+    setHeaderTheme(color: string) {
+      const isDarkColor = colorIsDark(color)
+      const textColor = isDarkColor ? '#fff' : 'inherit'
+      const textHoverColor = isDarkColor ? lighten(color!, 6) : '#f6f6f6'
+      const topToolBorderColor = isDarkColor ? color : '#eee'
+      setCssVar('--top-header-bg-color', color)
+      setCssVar('--top-header-text-color', textColor)
+      setCssVar('--top-header-hover-color', textHoverColor)
+      this.setTheme({
+        topHeaderBgColor: color,
+        topHeaderTextColor: textColor,
+        topHeaderHoverColor: textHoverColor,
+        topToolBorderColor
+      })
+      if (this.getLayout === 'top') {
+        this.setMenuTheme(color)
+      }
+    },
+    initTheme() {
+      const isDark = useDark({
+        valueDark: 'dark',
+        valueLight: 'light'
+      })
+      isDark.value = this.getIsDark
     }
-  }
+  },
+  persist: true
 })
 
 export const useAppStoreWithOut = () => {

@@ -1,11 +1,11 @@
-import request from '@/config/axios'
+import request from '@/axios'
 
 // 获取所有字典
-export const getDictApi = (): Promise<IResponse> => {
-  return request.get({ url: '/dict/list' })
+export const getDictApi = () => {
+  return request.get({ url: '/mock/dict/list' })
 }
 
 // 模拟获取某个字典
-export const getDictOneApi = async (): Promise<IResponse> => {
-  return request.get({ url: '/dict/one' })
+export const getDictOneApi = async () => {
+  return request.get({ url: '/mock/dict/one' })
 }

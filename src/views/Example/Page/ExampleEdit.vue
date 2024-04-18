@@ -2,16 +2,15 @@
 import Write from './components/Write.vue'
 import { ContentDetailWrap } from '@/components/ContentDetailWrap'
 import { ref, unref } from 'vue'
-import { ElButton } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useRouter, useRoute } from 'vue-router'
 import { saveTableApi, getTableDetApi } from '@/api/table'
 import { TableData } from '@/api/table/types'
-import { useEmitt } from '@/hooks/web/useEmitt'
+import { useEventBus } from '@/hooks/event/useEventBus'
 
-const { emitter } = useEmitt()
+const { emit } = useEventBus()
 
-const { push } = useRouter()
+const { push, go } = useRouter()
 
 const { query } = useRoute()
 
@@ -34,17 +33,16 @@ const loading = ref(false)
 
 const save = async () => {
   const write = unref(writeRef)
-  const validate = await write?.elFormRef?.validate()?.catch(() => {})
-  if (validate) {
+  const formData = await write?.submit()
+  if (formData) {
     loading.value = true
-    const data = (await write?.getFormData()) as TableData
-    const res = await saveTableApi(data)
+    const res = await saveTableApi(formData)
       .catch(() => {})
       .finally(() => {
         loading.value = false
       })
     if (res) {
-      emitter.emit('getList', 'edit')
+      emit('getList', 'editor')
       push('/example/example-page')
     }
   }
@@ -55,10 +53,14 @@ const save = async () => {
   <ContentDetailWrap :title="t('exampleDemo.edit')" @back="push('/example/example-page')">
     <Write ref="writeRef" :current-row="currentRow" />
 
-    <template #right>
-      <ElButton type="primary" :loading="loading" @click="save">
+    <template #header>
+      <BaseButton @click="go(-1)">
+        {{ t('common.back') }}
+      </BaseButton>
+      <BaseButton type="primary" :loading="loading" @click="save">
         {{ t('exampleDemo.save') }}
-      </ElButton>
+      </BaseButton>
     </template>
   </ContentDetailWrap>
 </template>
+@/hooks/event/useEventBus

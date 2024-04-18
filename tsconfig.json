@@ -9,8 +9,9 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "jsxImportSource": "vue",
     "lib": ["esnext", "dom"],
-    "baseUrl": ".",
+    "baseUrl": "./",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
@@ -27,13 +28,10 @@
       "@intlify/unplugin-vue-i18n/types",
       "vite/client",
       "element-plus/global",
-      "@types/intro.js",
       "@types/qrcode",
-      "vite-plugin-svg-icons/client",
-      "unplugin-vue-define-options/macros-global"
-    ],
-    "typeRoots": ["./node_modules/@types/", "./types"]
+      "vite-plugin-svg-icons/client"
+    ]
   },
-  "include": ["src/**/*", "types/**/*.d.ts", "mock/**/*.ts", "package.json", "electron"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src", "types/**/*.d.ts", "mock/**/*.ts"]
+  // "exclude": ["dist", "node_modules"]
 }

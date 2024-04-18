@@ -41,32 +41,31 @@ export default defineComponent({
         id={`${variables.namespace}-tool-header`}
         class={[
           prefixCls,
-          'h-[var(--top-tool-height)] relative px-[var(--top-tool-p-x)] flex items-center justify-between',
-          'dark:bg-[var(--el-bg-color)]'
+          'h-[var(--top-tool-height)] relative px-[var(--top-tool-p-x)] flex items-center justify-between'
         ]}
       >
         {layout.value !== 'top' ? (
           <div class="h-full flex items-center">
             {hamburger.value && layout.value !== 'cutMenu' ? (
-              <Collapse class="hover-trigger" color="var(--top-header-text-color)"></Collapse>
+              <Collapse class="custom-hover" color="var(--top-header-text-color)"></Collapse>
             ) : undefined}
             {breadcrumb.value ? <Breadcrumb class="<md:hidden"></Breadcrumb> : undefined}
           </div>
         ) : undefined}
         <div class="h-full flex items-center">
           {screenfull.value ? (
-            <Screenfull class="hover-trigger" color="var(--top-header-text-color)"></Screenfull>
+            <Screenfull class="custom-hover" color="var(--top-header-text-color)"></Screenfull>
           ) : undefined}
           {size.value ? (
-            <SizeDropdown class="hover-trigger" color="var(--top-header-text-color)"></SizeDropdown>
+            <SizeDropdown class="custom-hover" color="var(--top-header-text-color)"></SizeDropdown>
           ) : undefined}
           {locale.value ? (
             <LocaleDropdown
-              class="hover-trigger"
+              class="custom-hover"
               color="var(--top-header-text-color)"
             ></LocaleDropdown>
           ) : undefined}
-          <UserInfo class="hover-trigger"></UserInfo>
+          <UserInfo></UserInfo>
         </div>
       </div>
     )

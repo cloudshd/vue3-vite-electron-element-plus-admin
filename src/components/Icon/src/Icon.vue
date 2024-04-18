@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, unref, ref, watch, nextTick } from 'vue'
+import { computed, unref } from 'vue'
 import { ElIcon } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
-import Iconify from '@purge-icons/generated'
 import { useDesign } from '@/hooks/web/useDesign'
+import { Icon } from '@iconify/vue'
 
 const { getPrefixCls } = useDesign()
 
@@ -15,15 +15,19 @@ const props = defineProps({
   // icon color
   color: propTypes.string,
   // icon size
-  size: propTypes.number.def(16)
+  size: propTypes.number.def(16),
+  hoverColor: propTypes.string
 })
-
-const elRef = ref<ElRef>(null)
 
 const isLocal = computed(() => props.icon.startsWith('svg-icon:'))
 
 const symbolId = computed(() => {
   return unref(isLocal) ? `#icon-${props.icon.split('svg-icon:')[1]}` : props.icon
+})
+
+// 是否使用在线图标
+const isUseOnline = computed(() => {
+  return import.meta.env.VITE_USE_ONLINE_ICON === 'true'
 })
 
 const getIconifyStyle = computed(() => {
@@ -33,36 +37,6 @@ const getIconifyStyle = computed(() => {
     color
   }
 })
-
-const updateIcon = async (icon: string) => {
-  if (unref(isLocal)) return
-
-  const el = unref(elRef)
-  if (!el) return
-
-  await nextTick()
-
-  if (!icon) return
-
-  const svg = Iconify.renderSVG(icon, {})
-  if (svg) {
-    el.textContent = ''
-    el.appendChild(svg)
-  } else {
-    const span = document.createElement('span')
-    span.className = 'iconify'
-    span.dataset.icon = icon
-    el.textContent = ''
-    el.appendChild(span)
-  }
-}
-
-watch(
-  () => props.icon,
-  (icon: string) => {
-    updateIcon(icon)
-  }
-)
 </script>
 
 <template>
@@ -71,8 +45,30 @@ watch(
       <use :xlink:href="symbolId" />
     </svg>
 
-    <span v-else ref="elRef" :class="$attrs.class" :style="getIconifyStyle">
-      <span class="iconify" :data-icon="symbolId"></span>
-    </span>
+    <template v-else>
+      <Icon v-if="isUseOnline" :icon="icon" :style="getIconifyStyle" />
+      <div v-else :class="`${icon} iconify`" :style="getIconifyStyle"></div>
+    </template>
   </ElIcon>
 </template>
+
+<style lang="less" scoped>
+@prefix-cls: ~'@{namespace}-icon';
+
+.@{prefix-cls},
+.iconify {
+  :deep(svg) {
+    &:hover {
+      // stylelint-disable-next-line
+      color: v-bind(hoverColor) !important;
+    }
+  }
+}
+
+.iconify {
+  &:hover {
+    // stylelint-disable-next-line
+    color: v-bind(hoverColor) !important;
+  }
+}
+</style>

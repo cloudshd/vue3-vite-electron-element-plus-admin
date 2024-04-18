@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
-import { Table } from '@/components/Table'
+import { Table, TableColumn } from '@/components/Table'
 import { getTableListApi } from '@/api/table'
 import { TableData } from '@/api/table/types'
 import { ref, h } from 'vue'
-import { ElTag, ElButton } from 'element-plus'
-import { TableColumn, TableSlotDefault } from '@/types/table'
+import { ElTag } from 'element-plus'
+import { BaseButton } from '@/components/Button'
 
 interface Params {
   pageIndex?: number
@@ -16,11 +16,6 @@ interface Params {
 const { t } = useI18n()
 
 const columns: TableColumn[] = [
-  {
-    field: 'index',
-    label: t('tableDemo.index'),
-    type: 'index'
-  },
   {
     field: 'title',
     label: t('tableDemo.title')
@@ -47,8 +42,8 @@ const columns: TableColumn[] = [
           cellValue === 1
             ? t('tableDemo.important')
             : cellValue === 2
-            ? t('tableDemo.good')
-            : t('tableDemo.commonly')
+              ? t('tableDemo.good')
+              : t('tableDemo.commonly')
       )
     }
   },
@@ -58,7 +53,16 @@ const columns: TableColumn[] = [
   },
   {
     field: 'action',
-    label: t('tableDemo.action')
+    label: t('tableDemo.action'),
+    slots: {
+      default: (data) => {
+        return (
+          <BaseButton type="primary" onClick={() => actionFn(data)}>
+            {t('tableDemo.action')}
+          </BaseButton>
+        )
+      }
+    }
   }
 ]
 
@@ -84,7 +88,7 @@ const getTableList = async (params?: Params) => {
 
 getTableList()
 
-const actionFn = (data: TableSlotDefault) => {
+const actionFn = (data: any) => {
   console.log(data)
 }
 </script>
@@ -96,12 +100,6 @@ const actionFn = (data: TableSlotDefault) => {
       :data="tableDataList"
       :loading="loading"
       :defaultSort="{ prop: 'display_time', order: 'descending' }"
-    >
-      <template #action="data">
-        <ElButton type="primary" @click="actionFn(data as TableSlotDefault)">
-          {{ t('tableDemo.action') }}
-        </ElButton>
-      </template>
-    </Table>
+    />
   </ContentWrap>
 </template>

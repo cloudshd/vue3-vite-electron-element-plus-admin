@@ -28,13 +28,7 @@ watch(
       show.value = true
       return
     }
-    if (!collapse) {
-      setTimeout(() => {
-        show.value = !collapse
-      }, 400)
-    } else {
-      show.value = !collapse
-    }
+    show.value = !collapse
   }
 )
 
@@ -60,8 +54,7 @@ watch(
       :class="[
         prefixCls,
         layout !== 'classic' ? `${prefixCls}__Top` : '',
-        'flex !h-[var(--logo-height)] items-center cursor-pointer pl-8px relative',
-        'dark:bg-[var(--el-bg-color)]'
+        'flex !h-[var(--logo-height)] items-center cursor-pointer pl-8px relative decoration-none overflow-hidden'
       ]"
       to="/"
     >

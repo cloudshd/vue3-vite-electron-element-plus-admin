@@ -7,7 +7,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { getTableDetApi } from '@/api/table'
 import { TableData } from '@/api/table/types'
 
-const { push } = useRouter()
+const { push, go } = useRouter()
 
 const { query } = useRoute()
 
@@ -27,6 +27,11 @@ getTableDet()
 
 <template>
   <ContentDetailWrap :title="t('exampleDemo.detail')" @back="push('/example/example-page')">
+    <template #header>
+      <BaseButton @click="go(-1)">
+        {{ t('common.back') }}
+      </BaseButton>
+    </template>
     <Detail :current-row="currentRow" />
   </ContentDetailWrap>
 </template>
